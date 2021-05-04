@@ -4,7 +4,6 @@ from flask import request, Blueprint, make_response, jsonify
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-
 @planets_bp.route("", methods=["GET", "POST"])
 def handle_planets():
     if request.method == "GET":
@@ -28,12 +27,32 @@ def handle_planets():
         return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
+    if planet is None:
+        return make_response("", 404)
 
-    return {
-        "id": planet.id,
-        "name": planet.name,
-        "description": planet.description
-    }
+    if request.method == "GET":
+        return {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description
+        }
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+
+        db.session.commit()
+
+        return make_response(f"Planet #{planet.id} successfully updated")
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet #{planet.id} successfully deleted")
+
+
+
+
