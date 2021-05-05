@@ -24,14 +24,17 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.name} successfully created", 201)
-
+        return make_response(jsonify(f"Planet {new_planet.name} successfully created", 201))
+        # return {
+        #     "success": True,
+        #     "message": f"Planet {new_planet.name} has been created" 
+        # }, 201
 
 @planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
     if planet is None:
-        return make_response("", 404)
+        return make_response(jsonify(""), 404)
 
     if request.method == "GET":
         return {
@@ -51,8 +54,4 @@ def handle_planet(planet_id):
     elif request.method == "DELETE":
         db.session.delete(planet)
         db.session.commit()
-        return make_response(f"Planet #{planet.id} successfully deleted")
-
-
-
-
+        return make_response(jsonify(f"Planet #{planet.id} successfully deleted"))

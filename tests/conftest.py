@@ -22,9 +22,14 @@ def client(app):
 
 @pytest.fixture
 def two_saved_planets(app):
-    # Arrange
     jupiter = Planet(name="Jupiter", description="cool planet")
     mars = Planet(name="Mars", description="red planet")
 
     db.session.add_all([jupiter, mars])
     db.session.commit()
+
+@pytest.fixture
+def planet_data(app):
+    return {"name": "Venus",
+    "description": "another planet"
+    }

@@ -20,3 +20,16 @@ def test_get_one_planet(client, two_saved_planets):
         "name": "Jupiter",
         "description": "cool planet"
     }
+
+
+def test_no_data_returns_error(client):
+    response = client.get("/planets/5")
+    assert response.status_code == 404
+
+
+def test_client_can_post(client, planet_data):
+    response = client.post ("/planets", json=planet_data)
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == jsonify(f"Planet {planet_data.name} successfully created", 200)
