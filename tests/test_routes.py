@@ -17,6 +17,6 @@ def test_get_one_planet(client, two_saved_planets):
     assert response.status_code == 200
     assert response_body == {
         "id": 1,
-        "name": "Venus",
-        "description": "another planet"
+        "name": "Jupiter",
+        "description": "cool planet"
     }
